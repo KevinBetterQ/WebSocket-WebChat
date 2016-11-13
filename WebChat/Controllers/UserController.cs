@@ -32,6 +32,13 @@ namespace WebChat.Controllers
             else
             {
                 Session["user"] = user;
+
+                HttpCookie myCookie = new HttpCookie("user");
+                myCookie.Value = user.GetUname();
+                myCookie.Expires.AddDays(1);
+                Response.Cookies.Add(myCookie);
+
+
                 return Content("true");
             }
          

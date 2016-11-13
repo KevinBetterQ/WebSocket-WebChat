@@ -52,13 +52,14 @@
                 <span style="margin-right:5px;" class="glyphicon glyphicon-comment"></span>当前在线人数
             </div>
         </div>
-        <div id="user_list" class="list-group" style="overflow-y:auto;height:500px"></div>
+        <div id="user_list" class="list-group" style="overflow-y:auto;height:500px">
+        </div>
     </div>
     <div id="zone_center" style=" float:left;margin-left:10px;margin-top:10px;">
         <div id="div_msgpanel" class="panel panel-success">
             <div class="panel-heading">
                 <div class="panel-title">
-                    <span id="msg_title">公共聊天记录</span>
+                    <span id="msg_title">聊天大厅</span>
 
                     <img id="msg_clear" title="消息清空" style="cursor:pointer;width:25px;float:right;margin-right:15px;" src="http://www.blue-zero.com/chat/IMG/msgclear.png" />
                     <img id="msg_back" title="消息撤回" style="cursor:pointer;width:25px;float:right;margin-right:15px;" src="http://www.blue-zero.com/chat/IMG/msgback.png" />
@@ -118,12 +119,12 @@
 
     function ToggleConnectionClicked() {
         if (SocketCreated && (ws.readyState == 0 || ws.readyState == 1)) {
-            lockOn("离开聊天室...");
+            lockOn("");
             SocketCreated = false;
             isUserloggedout = true;
             ws.close();
         } else {
-            lockOn("进入聊天室...");
+            lockOn("");
             Log("准备连接到聊天服务器 ...");
             try {
                 if ("WebSocket" in window) {
@@ -190,8 +191,54 @@
     };
 
 
+    jQuery.cookie = function (name, value, options) {
+        if (typeof value != 'undefined') {
+            options = options || {};
+            if (value === null) {
+                value = '';
+                options = $.extend({}, options);
+                options.expires = -1;
+            }
+            var expires = '';
+            if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
+                var date;
+                if (typeof options.expires == 'number') {
+                    date = new Date();
+                    date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
+                } else {
+                    date = options.expires;
+                }
+                expires = '; expires=' + date.toUTCString();
+            }
+            var path = options.path ? '; path=' + (options.path) : '';
+            var domain = options.domain ? '; domain=' + (options.domain) : '';
+            var secure = options.secure ? '; secure' : '';
+            document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
+        } else {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    };
+
     $(document).ready(function () {
         $("#SendDataContainer").hide();
+
+        // 调用函数
+        var username = $.cookie("user"); //读取cookie
+        //alert(username);
+        // $('#txtName').val() = username;//是错误的，没法用
+        document.getElementById('txtName').value = username;
+
         var WebSocketsExist = true;
         try {
             var dummy = new WebSocket("ws://localhost:8989/test");
@@ -205,7 +252,7 @@
         }
 
         if (WebSocketsExist) {
-            Log("您的浏览器支持WebSocket. 您可以尝试连接到聊天服务器!", "OK");
+            Log("欢迎使用WebSocket + c#实现的WebChat", "OK");
             document.getElementById("Connection").value = "9.119.135.127:4141/chat";
         } else {
             Log("您的浏览器不支持WebSocket。请选择其他的浏览器再尝试连接服务器。", "ERROR");
@@ -218,7 +265,14 @@
                 evt.preventDefault();
             }
         })
+
+        
     });
+
+
+    
+
+
 
 </script>
 
