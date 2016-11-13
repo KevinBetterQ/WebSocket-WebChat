@@ -1,0 +1,98 @@
+﻿
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>注册</title>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css">
+</head>
+<body>
+    <header  style="background-position: 50% -125px;">
+        <div class="section_overlay">
+            <nav class="navbar navbar-default navbar-fixed-top">
+                <div class="container">
+                    <div class="navbar-brand"><a href="/Home"><strong> WebChat</strong></a></div>
+                    <div class="navbar-brand" style="float:right;"><a href="/User/Register">注册</a></div>
+                    <div class="navbar-brand" style="float:right;"><a href="/User/Login">登录</a></div>
+                    <div class="navbar-brand" style="float:right;"><a href="/File/Mine">我的</a></div>
+                    <div class="navbar-brand" style="float:right;"><a href="/Home/Index">主页</a></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <br><br><br>
+    <div class="container">
+        <h2>注册</h2>
+        <hr />
+        <div class="row clearfix">
+            <div class="col-md-6 column">
+                <div class="form-group">
+                    <label for="inputUID">账号</label>
+                    <h6 class="text-warning" style="display:inline"></h6>
+                    <input type="text" class="form-control" id="id_uid" />
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">姓名</label>
+                    <h6 class="text-warning" style="display:inline"></h6>
+                    <input type="text" class="form-control" id="id_uname" />
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">密码</label>
+                    <h6 class="text-warning" style="display:inline"></h6>
+                    <input type="password" class="form-control" id="id_passwd" />
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">确认密码</label>
+                    <h6 class="text-warning" style="display:inline"></h6>
+                    <input type="password" class="form-control" id="id_con_passwd" />
+                </div>
+                <button class="btn btn-default" id="bt_register">注册</button>
+            </div>
+            <div class="col-md-6 column">
+            </div>
+        </div>
+        <hr />
+    </div>
+</body>
+</html>
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script>
+    $("#bt_register").click(function () {
+        var uid = $("#id_uid").val();
+        var uname = $("#id_uname").val();
+        var passwd = $("#id_passwd").val();
+        var conpasswd = $("#id_con_passwd").val();
+        if ("" == uid || "" == uname || "" == passwd || "" == conpasswd) {
+            alert("信息不完整");
+            return;
+        }
+        if (passwd != conpasswd) {
+            alert("密码不一致");
+            return;
+        }
+        $.ajax({
+            type: "POST",
+            url: "/User/DealRegister",
+            data: {
+                uid: uid,
+                passwd: passwd,
+                uname: uname
+            },
+            dataType: "text",
+            success: function (data) {
+                if ("true" == data){
+                    alert("注册成功");
+                    window.location.href = '/User/Login';
+                }
+                else
+                    alert(data);
+            }
+        });
+    });
+</script>

@@ -1,0 +1,77 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="renderer" content="webkit" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <title>WebChat</title>
+    <meta content="WebSocket 聊天室 WebChat" name="description">
+    <meta content="WebSocket 聊天室 WebChat" name="keywords">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" />
+</head>
+<body>
+    <div id="zone_left" style="float: left;width: 270px;background-color: #f9fff2;border-right: 1px solid #e4e4e4; -moz-user-select: none;">
+        <div style="height:150px;margin-left:10px;">
+            <div style="float:left;color:orange; font-size:35px;font-weight:900;margin-left:10px;margin-top:30px;">WebChat</div>
+        </div>
+        <div style="height:75px;">
+            <div class="input-group">
+                <span class="input-group-addon" style="color:orange;">你的昵称</span>
+                <input id="inp_nickname" type="text" class="form-control" maxlength="10">
+                <span id="btn_getnick" class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                        <span style="color:orange;" class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                </span>
+            </div>
+            <div id="user_count" class="list-group-item list-group-item-success" style="cursor:pointer;">
+                <span id="nowusers_count" class="badge" style="background-color:green;"></span>
+                <span style="margin-right:5px;" class="glyphicon glyphicon-comment"></span>当前在线人数
+            </div>
+        </div>
+        <div id="user_list" class="list-group" style="overflow-y:auto;height:500px"></div>
+    </div>
+    <div id="zone_center" style=" float:left;margin-left:10px;margin-top:10px;">
+        <div id="div_msgpanel" class="panel panel-success">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <span id="msg_title">公共聊天记录</span>
+
+                    <img id="msg_clear" title="消息清空" style="cursor:pointer;width:25px;float:right;margin-right:15px;" src="http://www.blue-zero.com/chat/IMG/msgclear.png" />
+                    <img id="msg_back" title="消息撤回" style="cursor:pointer;width:25px;float:right;margin-right:15px;" src="http://www.blue-zero.com/chat/IMG/msgback.png" />
+                </div>
+            </div>
+            <div id="div_msgbox" class="panel-body" style="overflow-y:auto;height:400px"></div>
+            <div id="div_privmsg" class="panel-body" style="overflow-y:auto;"></div>
+        </div>
+        <div style="position:relative;left:0px;bottom:10px;">
+            <div style="float:left;margin-top:4px;">
+                <a class="emoji" style="margin-right:10px;" data-toggle="popover" data-placement="top" title="表情"><img style="outline-width:40px;" class="img_emoji" src="http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5c/huanglianwx_thumb.gif" /></a>
+                <a id="a_uploadimg" style="margin-right:10px;" title="上传图片"><img style="padding-top:4px;" src="http://www.blue-zero.com/chat/IMG/uploadpic.png" /></a>
+                <a id="a_uploadfile" style="margin-right:10px;" title="上传文件"><img src="http://www.blue-zero.com/chat/IMG/uploadfile.png" /></a>
+                <a id="a_doodle" style="margin-right:10px;" title="涂鸦"><img src="http://www.blue-zero.com/chat/IMG/doodle.png" /></a>
+                <a style="cursor:default;margin-right:10px;">|</a>
+                <a id="a_getphoto" style="margin-right:10px;" title="拍照"><img src="http://www.blue-zero.com/chat/IMG/camera.png" /></a>
+                <a id="a_record" style="margin-right:10px;" title="录音"><img src="http://www.blue-zero.com/chat/IMG/record.png" /></a>
+            </div>
+            <div style="float:right;">
+                <span style='color:gray;font-size:12px;'>ctrl+回车发送</span>
+                <button id="btn_conn" type="button" class="btn btn-warning">连接</button>
+                <button id="btn_say" type="button" class="btn btn-success">我要说几句</button>
+            </div>
+        </div>
+        <div style="clear:both">
+            <textarea id="inp_say" placeholder="点击左侧用户可私聊" class="form-control" style="height:125px;"></textarea>
+        </div>
+    </div>
+    <div id="zone_right" style="float: left; margin-left: 10px;">
+        <div style="margin:20px;float:left;color:blue;">
+            使用Html5的<span style="font-weight:900;font-size:16px;">websocket</span>传输协议<br /><br />服务端基于<span style="font-weight:900;font-size:16px;">完成端口</span>的socket监听方式<br /><br /><br /><br />
+        </div>
+
+    </div>
+</body>
+</html>

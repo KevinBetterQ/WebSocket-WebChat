@@ -1,0 +1,228 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="renderer" content="webkit" charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <title>WebChat</title>
+    <meta content="WebSocket 聊天室 WebChat" name="description">
+    <meta content="WebSocket 聊天室 WebChat" name="keywords">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.0/css/bootstrap.min.css" />
+</head>
+<body>
+    <header style="background-position: 50% -125px; ">
+        <div class="section_overlay" >
+            <nav class="navbar navbar-default navbar-fixed-top ">
+                <div class="container ">
+                    <div class="navbar-brand"><a href="/Home"><strong> WebChat</strong></a></div>
+                    <div class="navbar-brand" style="float:right;"><a href="/User/Register">注册</a></div>
+                    <div class="navbar-brand" style="float:right;"><a href="/Home">聊天</a></div>
+                    <div class="navbar-brand" style="float:right;"><a href="/Home/Index">主页</a></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+    <br><br><br>
+    <div id="skm_LockPane"></div>
+
+    <div id="zone_left" style="float: left;width: 270px;background-color: #f9fff2;border-right: 1px solid #e4e4e4; -moz-user-select: none;">
+        <div style="height:100px;margin-left:10px;">
+            <div style="float:left;color:orange; font-size:35px;font-weight:900;margin-left:10px;margin-top:30px;">WebChat</div>
+        </div>
+        <div style="height:75px;">
+            <div class="input-group">
+                <span class="input-group-addon" style="color:orange;">你的昵称</span>
+                <input id="txtName" type="text" class="form-control" value="Kevin">
+                <span id="btn_getnick" class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                        <span style="color:orange;" class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                </span>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" style="color:orange;">服务器地址</span>
+                <input type="text" id="Connection" class="form-control" />
+            </div>
+            <div id="user_count" class="list-group-item list-group-item-success" style="cursor:pointer;">
+                <span id="nowusers_count" class="badge" style="background-color:green;"></span>
+                <span style="margin-right:5px;" class="glyphicon glyphicon-comment"></span>当前在线人数
+            </div>
+        </div>
+        <div id="user_list" class="list-group" style="overflow-y:auto;height:500px"></div>
+    </div>
+    <div id="zone_center" style=" float:left;margin-left:10px;margin-top:10px;">
+        <div id="div_msgpanel" class="panel panel-success">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <span id="msg_title">公共聊天记录</span>
+
+                    <img id="msg_clear" title="消息清空" style="cursor:pointer;width:25px;float:right;margin-right:15px;" src="http://www.blue-zero.com/chat/IMG/msgclear.png" />
+                    <img id="msg_back" title="消息撤回" style="cursor:pointer;width:25px;float:right;margin-right:15px;" src="http://www.blue-zero.com/chat/IMG/msgback.png" />
+                </div>
+            </div>
+            <div id='LogContainer' class="panel-body" style="overflow-y:auto;height:400px"></div>
+            <div id="div_privmsg" class="panel-body" style="overflow-y:auto;"></div>
+        </div>
+        <div style="position:relative;left:0px;bottom:10px;">
+            <div style="float:left;margin-top:4px;">
+                <a class="emoji" style="margin-right:10px;" data-toggle="popover" data-placement="top" title="表情"><img style="outline-width:40px;" class="img_emoji" src="http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5c/huanglianwx_thumb.gif" /></a>
+                <a id="a_uploadimg" style="margin-right:10px;" title="上传图片"><img style="padding-top:4px;" src="http://www.blue-zero.com/chat/IMG/uploadpic.png" /></a>
+                <a id="a_uploadfile" style="margin-right:10px;" title="上传文件"><img src="http://www.blue-zero.com/chat/IMG/uploadfile.png" /></a>
+                <a id="a_doodle" style="margin-right:10px;" title="涂鸦"><img src="http://www.blue-zero.com/chat/IMG/doodle.png" /></a>
+                <a style="cursor:default;margin-right:10px;">|</a>
+                <a id="a_getphoto" style="margin-right:10px;" title="拍照"><img src="http://www.blue-zero.com/chat/IMG/camera.png" /></a>
+                <a id="a_record" style="margin-right:10px;" title="录音"><img src="http://www.blue-zero.com/chat/IMG/record.png" /></a>
+            </div>
+            <div style="float:right;">
+                <span style='color:gray;font-size:12px;'>ctrl+回车发送</span>
+                <button id="ToggleConnection" type="button" class="btn btn-warning" onclick="ToggleConnectionClicked();">连接</button>
+                <button id="SendData" type="button" class="btn btn-success" onclick="SendDataClicked();">发送</button>
+            </div>
+        </div>
+        <div style="clear: both">
+            <textarea id="DataToSend" placeholder="点击左侧用户可私聊" class="form-control" style="height:125px;"></textarea>
+        </div>
+    </div>
+    <div id="zone_right" style="float: left; margin-left: 10px;">
+        <div style="margin:20px;float:left;color:blue;">
+            使用Html5的<span style="font-weight:900;font-size:16px;">websocket</span>传输协议<br /><br />服务端基于<span style="font-weight:900;font-size:16px;">完成端口</span>的socket监听方式<br /><br /><br /><br />
+        </div>
+
+    </div>
+
+</body>
+</html>
+
+<script src="http://cdn.bootcss.com/jquery/1.11.1/jquery.min.js"></script>
+<script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    var ws;
+    var SocketCreated = false;
+    var isUserloggedout = false;
+
+    function lockOn(str) {
+        var lock = document.getElementById('skm_LockPane');
+        if (lock)
+            lock.className = 'LockOn';
+        lock.innerHTML = str;
+    }
+
+    function lockOff() {
+        var lock = document.getElementById('skm_LockPane');
+        lock.className = 'LockOff';
+    }
+
+    function ToggleConnectionClicked() {
+        if (SocketCreated && (ws.readyState == 0 || ws.readyState == 1)) {
+            lockOn("离开聊天室...");
+            SocketCreated = false;
+            isUserloggedout = true;
+            ws.close();
+        } else {
+            lockOn("进入聊天室...");
+            Log("准备连接到聊天服务器 ...");
+            try {
+                if ("WebSocket" in window) {
+                    ws = new WebSocket("ws://" + document.getElementById("Connection").value);
+                }
+                else if ("MozWebSocket" in window) {
+                    ws = new MozWebSocket("ws://" + document.getElementById("Connection").value);
+                }
+
+                SocketCreated = true;
+                isUserloggedout = false;
+            } catch (ex) {
+                Log(ex, "ERROR");
+                return;
+            }
+            document.getElementById("ToggleConnection").innerHTML = "断开";
+            ws.onopen = WSonOpen;
+            ws.onmessage = WSonMessage;
+            ws.onclose = WSonClose;
+            ws.onerror = WSonError;
+        }
+    };
+
+
+    function WSonOpen() {
+        lockOff();
+        Log("连接已经建立。", "OK");
+        $("#SendDataContainer").show();
+        ws.send("login:" + document.getElementById("txtName").value);
+    };
+
+    function WSonMessage(event) {
+        Log(event.data);
+    };
+
+    function WSonClose() {
+        lockOff();
+        if (isUserloggedout)
+            Log("【" + document.getElementById("txtName").value + "】离开了聊天室！");
+        document.getElementById("ToggleConnection").innerHTML = "连接";
+        $("#SendDataContainer").hide();
+    };
+
+    function WSonError() {
+        lockOff();
+        Log("远程连接中断。", "ERROR");
+    };
+
+
+    function SendDataClicked() {
+        if (document.getElementById("DataToSend").value.trim() != "") {
+            ws.send(document.getElementById("txtName").value + "说 :\"" + document.getElementById("DataToSend").value + "\"");
+            document.getElementById("DataToSend").value = "";
+        }
+    };
+
+
+    function Log(Text, MessageType) {
+        if (MessageType == "OK") Text = "<span style='color: green;'>" + Text + "</span>";
+        if (MessageType == "ERROR") Text = "<span style='color: red;'>" + Text + "</span>";
+        document.getElementById("LogContainer").innerHTML = document.getElementById("LogContainer").innerHTML + Text + "<br />";
+        var LogContainer = document.getElementById("LogContainer");
+        LogContainer.scrollTop = LogContainer.scrollHeight;
+    };
+
+
+    $(document).ready(function () {
+        $("#SendDataContainer").hide();
+        var WebSocketsExist = true;
+        try {
+            var dummy = new WebSocket("ws://localhost:8989/test");
+        } catch (ex) {
+            try {
+                webSocket = new MozWebSocket("ws://localhost:8989/test");
+            }
+            catch (ex) {
+                WebSocketsExist = false;
+            }
+        }
+
+        if (WebSocketsExist) {
+            Log("您的浏览器支持WebSocket. 您可以尝试连接到聊天服务器!", "OK");
+            document.getElementById("Connection").value = "9.119.135.127:4141/chat";
+        } else {
+            Log("您的浏览器不支持WebSocket。请选择其他的浏览器再尝试连接服务器。", "ERROR");
+            document.getElementById("ToggleConnection").disabled = true;
+        }
+
+        $("#DataToSend").keypress(function (evt) {
+            if (evt.keyCode == 13) {
+                $("#SendData").click();
+                evt.preventDefault();
+            }
+        })
+    });
+
+</script>
+
+
+
+
+
