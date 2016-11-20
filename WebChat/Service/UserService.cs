@@ -11,6 +11,7 @@ namespace WebChat.Service
 {
     public class UserService
     {
+        //检查登录
         public User CheckLogin(String uid, String passwd)
         {
             User user = null;

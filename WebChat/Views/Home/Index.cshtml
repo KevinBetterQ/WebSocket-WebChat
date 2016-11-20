@@ -31,48 +31,46 @@
 
     <div class="container">
         <div class="row clearfix">
-            <div class="col-md-3 column">
 
-                <div id="zone_left" style="float: left; width: 295px; margin-top: 10px; background-color: #f9fff2; border-right: 1px solid #e4e4e4; -moz-user-select: none; ">
-                    <div style="height:100px;margin-left:10px;">
-                        <div style="float:left;color:orange; font-size:35px;font-weight:900;margin-left:10px;margin-top:30px;">WebChat</div>
+            <div id="zone_left" style="float: left; width: 320px; margin-top: 10px; background-color: #f9fff2; border-right: 1px solid #e4e4e4; -moz-user-select: none; ">
+                <div style="height:100px;margin-left:10px;">
+                    <div style="float:left;color:orange; font-size:35px;font-weight:900;margin-left:10px;margin-top:30px;">WebChat</div>
+                </div>
+                <div style="height:75px;">
+                    <div class="input-group">
+                        <span class="input-group-addon" style="color:orange;">你的昵称&emsp;</span>
+                        <input id="txtName" type="text" class="form-control" value="Kevin">
+                        <!--
+                    <span id="btn_getnick" class="input-group-btn">
+                    <button class="btn btn-default" type="button">
+                        <span style="color:orange;" class="glyphicon glyphicon-refresh"></span>
+                    </button>
+                    </span>
+                -->
                     </div>
-                    <div style="height:75px;">
-                        <div class="input-group">
-                            <span class="input-group-addon" style="color:orange;">你的昵称&emsp;</span>
-                            <input id="txtName" type="text" class="form-control" value="Kevin">
-                            <!--
-                                <span id="btn_getnick" class="input-group-btn">
-                                <button class="btn btn-default" type="button">
-                                    <span style="color:orange;" class="glyphicon glyphicon-refresh"></span>
-                                </button>
-                                </span> 
-                            -->
-                        </div>
-                        <div class="input-group">
-                            <span class="input-group-addon" style="color:orange;">服务器地址</span>
-                            <input type="text" id="Connection" class="form-control" />
-                        </div>
-                        <div id="user_count" class="list-group-item list-group-item-success" style="cursor:pointer;">
-                            <span id="nowusers_count" class="badge" style="background-color:green;"></span>
-                            <span style="margin-right:5px;" class="glyphicon glyphicon-comment"></span>当前在线人数
-                        </div>
+                    <div class="input-group">
+                        <span class="input-group-addon" style="color:orange;">服务器地址</span>
+                        <input type="text" id="Connection" class="form-control" />
                     </div>
-                    <div id="user_list" class="list-group" style="overflow-y:auto;height:100px">
-                    </div>
+                    
+                </div>
+
+                <div id="user_count" class="list-group-item list-group-item-success" style="cursor:pointer;">
+                    <span id="nowusers_count" class="badge" style="background-color:green;"></span>
+                    <span style="margin-right:5px;" class="glyphicon glyphicon-comment"></span>当前在线人数
+                </div>
+
+                <div id="user_list" class="list-group" style="overflow-y:auto;">
+                    <a id="all" class="list-group-item" onclick="demo(this.id)">大厅</a>  
                 </div>
             </div>
             
-            <div class="col-md-9 column">
-
-
-
-
                 <div id="zone_center" style=" float: left; margin-top: 10px; ">
                     <div id="div_msgpanel" class="panel panel-success">
                         <div class="panel-heading">
                             <div class="panel-title">
-                                <span id="msg_title">&emsp;&emsp;
+                                <span id="msg_title">
+                                    &emsp;&emsp;
                                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
                                     &emsp;&emsp;&emsp;聊天大厅&emsp;&emsp;&emsp;
                                     &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;
@@ -88,7 +86,7 @@
                     <div style="position:relative;left:0px;bottom:10px;">
                         <div style="float:left;margin-top:4px;">
                             <a class="emoji" style="margin-right:10px;" data-toggle="popover" data-placement="top" title="表情"><img style="outline-width:40px;" class="img_emoji" src="http://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/5c/huanglianwx_thumb.gif" /></a>
-                            
+
                         </div>
                         <div style="float:right;">
                             <span style='color:gray;font-size:12px;'>ctrl+回车发送</span>
@@ -100,7 +98,10 @@
                         <textarea id="DataToSend" placeholder="点击左侧用户可私聊" class="form-control" style="height:125px;"></textarea>
                     </div>
                 </div>
-            </div>
+                        
+             
+             
+            
         </div>
     </div>
 
@@ -117,6 +118,8 @@
     var ws;
     var SocketCreated = false;
     var isUserloggedout = false;
+
+   
 
     function lockOn(str) {
         var lock = document.getElementById('skm_LockPane');
@@ -167,10 +170,24 @@
         Log("连接已经建立。", "OK");
         $("#SendDataContainer").show();
         ws.send("login:" + document.getElementById("txtName").value);
+        
     };
 
-    function WSonMessage(event) {
-        Log(event.data);
+    function WSonMessage(evt) {
+        
+        var recestring = evt.data;
+        if (recestring.indexOf("+++") > -1) {
+            recestring = recestring.substring(3);
+            userLog(recestring);
+            recestring = "欢迎" + recestring + "来到大厅";
+        }
+        if (recestring.indexOf("---") > -1) {
+            recestring = recestring.substring(3);
+            $("#"+recestring).remove();
+            recestring = recestring + "离开大厅";
+        }
+       
+        Log(recestring);
     };
 
     function WSonClose() {
@@ -203,12 +220,29 @@
         LogContainer.scrollTop = LogContainer.scrollHeight;
     };
 
-    function setvalue() {
-
-        var username = "hello";
-        window.stub.jsMethod(username);//用接口stub, 通过调用内部类中的方法jsMethod给java传回result。
+    function userLog(Text) {
+        Text = "<a id=" + Text + " class='list-group-item' onclick='demo(this.id)'>" + Text + "</a>";
+        document.getElementById("user_list").innerHTML = document.getElementById("user_list").innerHTML + Text ;
+        var user_list = document.getElementById("user_list");
+        user_list.scrollTop = user_list.scrollHeight;
     };
 
+    var choice = "all";
+    function demo(n) {
+        alert(n);
+        choice = n;
+        if (n != "all") {
+            Text = " &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;与&emsp;" + choice + "&emsp;的聊天窗口&emsp;&emsp;"
+            + "&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;";
+        } else {
+            Text = " &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;"+
+                "&emsp;&emsp;&emsp;聊天大厅&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp; &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;";
+        }
+        
+        document.getElementById("msg_title").innerHTML =  Text;
+        ws.send("tototo"+choice);
+
+    }
 
     jQuery.cookie = function (name, value, options) {
         if (typeof value != 'undefined') {
@@ -253,6 +287,7 @@
 
     $(document).ready(function () {
         $("#SendDataContainer").hide();
+       
 
         // 调用函数
        
@@ -292,7 +327,7 @@
 
     function toastMessage() { window.control.toastMessage(username) }
     
-
+    
 
 
 </script>
