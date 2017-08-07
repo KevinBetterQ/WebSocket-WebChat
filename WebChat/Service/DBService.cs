@@ -28,7 +28,7 @@ namespace WebChat.Service
             connection.Close();
         }
 
-        //查询
+        //zhuceu查询
         public int Query(string sql)
         {
             MySqlCommand command = new MySqlCommand(sql, connection);
@@ -36,7 +36,7 @@ namespace WebChat.Service
             return rows;
         }
 
-        //查询并遍历
+        //denglu查询并遍历
         public MySqlDataReader Query2(string sql)
         {
             MySqlCommand command = new MySqlCommand(sql, connection);

@@ -31,12 +31,12 @@
             <div class="col-md-6 column">
                 <div class="form-group">
                     <label for="inputUID">UID</label>
-                    <h6 class="text-warning" style="display:inline"></h6>
+                    
                     <input type="email" class="form-control" id="inputUID" />
                 </div>
                 <div class="form-group">
                     <label for="inputPassword">Password</label>
-                    <h6 class="text-warning" style="display:inline"></h6>
+                   
                     <input type="password" class="form-control" id="inputPassword" />
                 </div>
                 <button class="btn btn-default" id="bt_login">登录</button>
@@ -56,48 +56,6 @@
 <script src="http://cdn.bootcss.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
 <script>
 
-    jQuery.cookie = function (name, value, options) {
-        if (typeof value != 'undefined') {
-            options = options || {};
-            if (value === null) {
-                value = '';
-                options = $.extend({}, options);
-                options.expires = -1;
-            }
-            var expires = '';
-            if (options.expires && (typeof options.expires == 'number' || options.expires.toUTCString)) {
-                var date;
-                if (typeof options.expires == 'number') {
-                    date = new Date();
-                    date.setTime(date.getTime() + (options.expires * 24 * 60 * 60 * 1000));
-                } else {
-                    date = options.expires;
-                }
-                expires = '; expires=' + date.toUTCString();
-            }
-            var path = options.path ? '; path=' + (options.path) : '';
-            var domain = options.domain ? '; domain=' + (options.domain) : '';
-            var secure = options.secure ? '; secure' : '';
-            document.cookie = [name, '=', encodeURIComponent(value), expires, path, domain, secure].join('');
-        } else {
-            var cookieValue = null;
-            if (document.cookie && document.cookie != '') {
-                var cookies = document.cookie.split(';');
-                for (var i = 0; i < cookies.length; i++) {
-                    var cookie = jQuery.trim(cookies[i]);
-                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-    };
-
-
-
-
     $("#bt_login").click(function () {
         var uid = $("#inputUID").val();
         var passwd =$("#inputPassword").val();
@@ -115,7 +73,6 @@
             dataType: "text",
             success: function (data) {
                 if ("true" == data){
- 
                     window.location.href = '/Home/index';
                 }
                     
