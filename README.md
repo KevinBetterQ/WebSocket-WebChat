@@ -1,5 +1,6 @@
 # 基于WebSocket的聊天系统 - 聊天网站部分：  
-整个 “ 基于WebSocket的聊天系统 ” 包含三部分，服务器端 + 聊天网站 + Android端。  
+整个 “ 基于WebSocket的聊天系统 ” 包含三部分，服务器端 + 聊天网站 + Android端。
+
 `WebSocket-WebChat` 是其中一部分：利用 bootstrap 实现聊天主界面开发。通过 WebSocket 协议实现浏览器的大厅聊天以及一对一聊天。    
 
 
